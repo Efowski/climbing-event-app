@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1>Event  </h1>
+<center>
+  {% if event.event_poster  %}
+  <img src="{{ event.event_poster.url }}" class="rounded mx-auto d-block" width="400" height="400"  >
+  {% endif %}
+  <br/>
+  <br/>
+
+  <br/>
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-primary">{{ event.name }}</li>
+        <li class="list-group-item">{{ event.venue }}</li>
+        <li class="list-group-item">{{ event.event_date }}</li>
+        
+        <li class="list-group-item">{{ event.description }}</li>
+        <li class="list-group-item">{{ event.participants }}</li>
+      </ul>
+      {% if request.user == event.administrator %}
+      <ul>
+        
+         <a href="{% url 'event-update' event.id %}" class="btn btn-outline-secondary"> Update</a></li>
+        <li class="list-group-item"><a href="{% url 'event-delete' event.id %}" class="btn btn-outline-danger"> Delete</a></li>
+      </ul>
+      {% endif %}
+      <h4><a href="{% url 'register-event' event.id %}">Register</a> this Event</h4>
+      <br/>
+      <br/>
+      <h4>Event Participants
+
+      </h4>
+      
+</center>
+{% endblock content  %}

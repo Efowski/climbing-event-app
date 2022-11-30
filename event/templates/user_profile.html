@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% if  user.is_authenticated %}
+<h2> {{ user.username   }} Profile</h2>
+<div> 
+    <p>Username: {{ user.username}}</p>
+    <p>First Name: {{ user.first_name}}</p>
+    <p>Last Name: {{ user.last_name}}</p>
+    <p>Update your profile</p>
+    <a href="{% url 'update-profile' user.id %}">UPDATE</a>
+<div>
+    <h3>Events you are the administrator</h3>
+    {% for  event in events %}
+    {% if event.administrator == request.user %}
+    {{ event }}
+    {% endif %}
+    
+    {% endfor %}
+    <h3>Events in which you participate</h3>
+    
+    
+    
+    {% for event in events %}
+    <div>
+    {{ event }}
+    </div>
+    
+    {% endfor %}
+    
+    
+</div>
+
+     
+{% endif %}
+      
+    
+{% endblock content  %}
