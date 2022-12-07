@@ -84,11 +84,12 @@ def search_event(request):
 
 def register_event(request, event_id):
     
-    event = Event.objects.filter(pk=event_id)
+    event = Event.objects.get(pk=event_id)
 
     if request.method == 'POST':
         event.participants.add(request.user)
-        return redirect('event-details', pk=event_id)
+        messages.success(request, "You have successfully registered for the event")
+        return redirect('home')
 
     return render (request, 'register_event.html', {'event': event,  })
 
