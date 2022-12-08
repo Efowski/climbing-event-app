@@ -8,6 +8,7 @@ urlpatterns = [
     path('event_details/<event_id>', views.event_details, name='event-details'),
     path('event_update/<event_id>', views.event_update, name='event-update'),
     path('event_delete/<event_id>', views.event_delete, name='event-delete'),
+    path('venue_list', views.venue_list, name="venue-list"),
     
     #search any object e.g. event, user 
     path('search_event', views.search_event, name='search-event'),

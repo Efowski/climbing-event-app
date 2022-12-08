@@ -1,7 +1,7 @@
  
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-from .models import  ClimbUser, Event, Venue
+from .models import Event, Venue
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
@@ -94,8 +94,14 @@ def register_event(request, event_id):
     return render (request, 'register_event.html', {'event': event,  })
 
 
+# Venue 
+
+def venue_list(request):
+    pass
+
+
 # User profile
-@login_required
+@login_required(login_url='login')
 def user_profile(request, id):
     user = User.objects.get(id=id)
     user_form = UserForm(instance=user)
