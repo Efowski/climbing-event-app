@@ -97,10 +97,27 @@ def register_event(request, event_id):
 # Venue 
 
 def venue_list(request):
-    pass
+    all_venue = Venue.objects.all()
+    
+    return render(request, 'venue_list.html', {'all_venue': all_venue,})
 
 
-# User profile
+def events_venue(request, venue_id):
+    venue = Venue.objects.get(id=venue_id)
+
+    events = venue.event_set.all()
+
+    if events:
+        return render(request, 'venue_events.html', {'evetns': events})
+
+    else:
+        messages.success(request, "No Event in that Venue")
+        return render(request, 'venue_events.html',)
+
+# User and User Profile
+
+
+
 @login_required(login_url='login')
 def user_profile(request, id):
     user = User.objects.get(id=id)
@@ -108,12 +125,6 @@ def user_profile(request, id):
 
     events = Event.objects.filter(participants=request.user)
     
-    
-
-    
-
-
-
     return render(request, 'user_profile.html', {'user': user, 'user_form': user_form, 'events': events,   })
 
 @login_required
