@@ -1,14 +1,14 @@
  
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
-from .models import Event, Venue
+
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .form import EventForm, UserForm
-
+from .form import EventForm, UserForm, VenueForm
+from .models import Event, Venue
  
 
 
@@ -108,12 +108,30 @@ def events_venue(request, venue_id):
     events = venue.event_set.all()
 
     if events:
-        return render(request, 'venue_events.html', {'evetns': events})
+        return render(request, 'venue_events.html', {'events': events})
 
     else:
         messages.success(request, "No Event in that Venue")
         return render(request, 'venue_events.html',)
 
+@login_required
+def create_venue(request):
+    submit = False
+    
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = VenueForm(request.POST, request.FILES)
+            if form.is_valid:
+                form.save()
+                return HttpResponseRedirect('/create_venue?submit=True')
+            else:
+                messages.success(request, 'Fields contain errors')
+        else: 
+            form = VenueForm()
+            return render (request, 'create_venue.html', {'form': form,})    
+        
+    return render (request, 'create_venue.html', {'form': form,}) 
+         
 # User and User Profile
 
 
