@@ -5,14 +5,14 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('create_event', views.create_event, name='create-event'),
-    path('event_details/<event_id>', views.event_details, name='event-details'),
-    path('event_update/<event_id>', views.event_update, name='event-update'),
-    path('event_delete/<event_id>', views.event_delete, name='event-delete'),
+    path('event_details/<slug:slug>', views.event_details, name='event-details'),
+    path('event_update/<slug:slug>', views.event_update, name='event-update'),
+    path('event_delete/<slug:slug>', views.event_delete, name='event-delete'),
 
     path('venue_list', views.venue_list, name="venue-list"),
     path('venue_events/<venue_id>', views.events_venue, name='events-venue'),
     path('create_venue', views.create_venue, name='create-venue'),
-
+    path('venue_details/<venue_id>', views.venue_details, name='venue-details'),
     
     
     #search any object e.g. event, user 

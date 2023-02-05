@@ -2,6 +2,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.urls import reverse
+
 
 
 
@@ -24,9 +26,9 @@ class Venue(models.Model):
     address = models.CharField(max_length=250)
     zipcode = models.CharField('ZIPCODE', max_length=15)
     website = models.URLField('Webiste', blank=True)
-    email_address = models.EmailField('Email Address', blank=True)
+    email_address = models.EmailField('Email Address', blank=True, unique=True)
     venue_image = models.ImageField(upload_to='venue_image/', null=True, blank=True,)
-
+    slug = models.SlugField(null=True, unique=True)
 
     def __str__(self):
         return self.name
@@ -41,9 +43,13 @@ class Event(models.Model):
     description = models.TextField(blank=True)
     participants = models.ManyToManyField(User, blank=True, related_name='events' )
     event_poster = models.ImageField(upload_to='poster/', null=True, blank=True,)
+    slug = models.SlugField(null=True, unique=True)
 
 
     def __str__(self):
         return self.name            
         
 
+    def get_absolute_url(self):
+        return reverse("event_detail", kwargs={"slug": self.self})
+    

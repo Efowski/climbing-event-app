@@ -35,10 +35,10 @@ def create_event(request):
     else:
         messages.error(request, "You must create account to create Event")
     
-def event_details(request, event_id):
+def event_details(request, slug):
     user = User()
 
-    event = Event.objects.get(pk=event_id)
+    event = Event.objects.get(slug=slug)
     return render(request, 'event_details.html', {'event': event, 'user': user,})
 
 @login_required
@@ -131,6 +131,11 @@ def create_venue(request):
             return render (request, 'create_venue.html', {'form': form,})    
         
     return render (request, 'create_venue.html', {'form': form,}) 
+
+
+def venue_details(request, venue_id):
+    venue = Venue.objects.get(pk=venue_id)
+    return render (request, venue_details.html, {'venue': venue, })
          
 # User and User Profile
 
