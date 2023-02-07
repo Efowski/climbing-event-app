@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1>Event  </h1>
+<center>
+  {% if event.event_poster  %}
+  <img src="{{ event.event_poster.url }}" class="rounded mx-auto d-block" width="400" height="400"  >
+  {% endif %}
+  <br/>
+  <br/>
+
+  <br/>
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-primary">{{ event.name }}</li>
+        <li class="list-group-item">{{ event.venue }}</li>
+        <li class="list-group-item">{{ event.event_date }}</li>
+        
+        <li class="list-group-item">{{ event.description }}</li>
+        <h4>Event Participants</h4>
+        <li class="list-group-item"> {% for participants in event.participants.all  %}
+        {{ participants }} </br>
+        {% endfor %}
+        </li><br/>
+        
+      </ul>
+      {% if request.user == event.administrator %}
+      <ul>
+        
+         <a href="{% url 'event-update' event.slug %}" class="btn btn-outline-secondary"> Update</a></li>
+        <li class="list-group-item"><a href="{% url 'event-delete' event.slug %}" class="btn btn-outline-danger"> Delete</a></li>
+      </ul>
+      {% endif %}
+      <h4><a href="{% url 'register-event' event.slug %}">Register</a> this Event</h4>
+      <br/>
+      <br/>
+      
+
+      </h4>
+      <h3>Comments:</h3><br/>
+
+      {% if not event.comments.all %}
+        <p>No Comments yet</p>
+      {% else %} 
+        {% for comment in event.comments.all %}
+          {{ comment.author }} - {{ comment.contents }}
+        {% endfor %}  
+      {% endif %}
+</center>
+{% endblock content  %}

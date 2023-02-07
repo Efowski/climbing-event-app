@@ -51,5 +51,18 @@ class Event(models.Model):
         
 
     def get_absolute_url(self):
-        return reverse("event_detail", kwargs={"slug": self.self})
+        return reverse("event_detail", kwargs={"slug": self.slug})
     
+
+class Comment(models.Model):
+
+    approval = False
+
+    event = models.ForeignKey(Event, blank=True, null=True, related_name='comments', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
+    contents = models.TextField(blank=True)
+    date_added = models.DateField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['date_added']
+
