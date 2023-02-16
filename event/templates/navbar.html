@@ -30,7 +30,7 @@
             Events
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'venue-list' %}">All Events</a></li>
+            <li><a class="dropdown-item" href="{% url 'events-list' %}">All Events</a></li>
             {% if user.is_authenticated %} 
             <li><a class="dropdown-item" href="{% url 'create-event' %}">Create Event</a></li>
              

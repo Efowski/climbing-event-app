@@ -37,6 +37,45 @@
       
 
       </h4>
+      <div>
       
+      {% if user.is_authenticated %} 
+      <h4>Add Comment:</h4>
+      <form action="" method="POST">
+        <div>
+        {% csrf_token %}
+        {{ commentform.as_p }}
+        <input type="submit" Value="Post">
+        </div>
+      </form  
+      {% else %}
+      <h2>You need to Login to Comment</h2>
+      {% endif %}
+
+      </div>
+      <div>
+        <h3>Comments:</h3><br/>
+
+      {% if not event.comments.all %}
+        <p>No Comments yet</p>
+      {% else %} 
+      
+      {% comment %} {% if comment.is_parent %}   {% endcomment %}
+      {% for comment in event.comments.all %}
+      
+
+        <div>
+          
+          <p> <b>Author:</b> {{ comment.author }} : {{ comment.date_added }} </p>
+            
+          {{ comment.contents }}
+        </div>  
+            </br>
+      
+      {% endfor %}  
+      {% comment %} {% endif %}       {% endcomment %}
+      {% endif %}   
+      
+      </div>
 </center>
 {% endblock content  %}
