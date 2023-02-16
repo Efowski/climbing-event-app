@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from .models import Venue 
 from .models import Event
+from .models import Comment
 
 
 class EventForm(ModelForm):
@@ -85,4 +86,21 @@ class UserForm(ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}), 
              
+        }
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+
+        fields = ('contents', )
+
+        labels = {
+            # 'author': 'Author',
+            'contents': 'Write Comment',
+        }
+
+        widgets =  {
+            'contents': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Write your Comment'}),
+            
         }

@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .form import EventForm, UserForm, VenueForm
-from .models import Event, Venue
+from .form import EventForm, UserForm, VenueForm, CommentForm
+from .models import Event, Venue, Comment
  
 
 
@@ -17,6 +17,12 @@ def home(request):
 
     return render(request, 'home.html', {'all_events':all_events, })
 
+
+def all_events(request):
+     
+    events = Event.objects.all()
+
+    return render(request, 'events_list.html', {'events': events, })
 
 @login_required
 def create_event(request):
@@ -34,12 +40,26 @@ def create_event(request):
             return render (request, 'create_event.html', {'form': form,})    
     else:
         messages.error(request, "You must create account to create Event")
-    
+
+
 def event_details(request, slug):
     user = User()
-
     event = Event.objects.get(slug=slug)
-    return render(request, 'event_details.html', {'event': event, 'user': user,})
+    commentform = CommentForm()
+    
+    if request.method == 'POST':
+        commentform = CommentForm(request.POST or None)
+        if commentform.is_valid:
+            content = request.POST.get('contents')
+            comment = Comment.objects.create(event=event, author=request.user, contents=content)
+            comment.save()
+            return redirect('home')
+        else:
+            commentform = CommentForm()
+    
+    comments = Comment.objects.all()
+             
+    return render(request, 'event_details.html', {'event': event, 'user': user, 'commentform': commentform, 'comments':comments  })
 
 @login_required
 def event_update(request, event_id):

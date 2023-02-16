@@ -62,7 +62,19 @@ class Comment(models.Model):
     author = models.ForeignKey(User, blank=False, on_delete=models.CASCADE)
     contents = models.TextField(blank=True)
     date_added = models.DateField(auto_now_add=True)
+    parent =models.ForeignKey('self', blank=True, null=True, related_name='replies', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['date_added']
 
+
+    def __str__(self):
+        return str(self.author) + ' comment ' + str(self.contents)
+
+
+    @property
+    def child(self):
+        return Comment.objects.filter(parent=self).reverse()
+        
+    
+    
