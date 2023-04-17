@@ -16,7 +16,13 @@
     {% if event.administrator == request.user %}
     {{ event }}
     {% endif %}
-    
+    {% if request.user == event.administrator %}
+    <ul>
+      
+       <a href="{% url 'event-update' event.id %}" class="btn btn-outline-secondary"> Update</a></li>
+      <li class="list-group-item"><a href="{% url 'event-delete' event.id %}" class="btn btn-outline-danger"> Delete</a></li>
+    </ul>
+    {% endif %}
     {% endfor %}
     <h3>Events in which you participate</h3>
     
@@ -24,7 +30,10 @@
     
     {% for event in events %}
     <div>
-    {{ event }}
+    <a href="{% url 'event-details' event.id %}">{{ event }}</a>
+    </div>
+    <div>
+    
     </div>
     
     {% endfor %}

@@ -10,7 +10,7 @@
     <center>
     {% for event in all_events %}
         <ul class="list-group" >    
-    <li class="list-group-item" ><a href="{% url 'event-details' event.id %}">{{ event.name }} </a> - {{ event.venue }} </li>
+    <li class="list-group-item" > {{ event.name }} - {{ event.venue }}  </li>
         </ul>    
         
     {% endfor %}

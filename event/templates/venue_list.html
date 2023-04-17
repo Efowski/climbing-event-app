@@ -12,9 +12,9 @@
         
     
     {% block content %}
-    {% for venue in all_venue %}
+    {% for venue in venue %}
     <div>
-        <a href="{% url 'events-venue' venue.id %}"><h3>{{ venue }}</h3></a>
+        <a href="{% url 'venue-details' venue.slug %}"><h3>{{ venue }}</h3></a>
         <p>{{ venue.address }}</p>
     </div>
     {% endfor %}

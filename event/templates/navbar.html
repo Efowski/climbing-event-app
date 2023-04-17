@@ -15,7 +15,7 @@
             Venues
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'venue-list' %}">All Venues</a></li>
+            <li><a class="dropdown-item" href="{% url 'venues-list' %}">All Venues</a></li>
             {% if user.is_authenticated %} 
             <li><a class="dropdown-item" href="{% url 'create-venue' %}">Create Venue</a></li>
              

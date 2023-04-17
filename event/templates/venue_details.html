@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1>Venue  </h1>
+<center>
+  {% if event.event_poster  %}
+  <img src="{{ event.event_poster.url }}" class="rounded mx-auto d-block" width="400" height="400"  >
+  {% endif %}
+  <br/>
+  <br/>
+
+  <br/>
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-primary">{{ venue.name }}</li>
+        <li class="list-group-item">{{  venue.address }}</li>
+        <li class="list-group-item">{{  venue.email_address }}</li>
+        
+        <li class="list-group-item"><a href="">{{ venue.website }}</a></li>
+         
+        </li><br/>
+        
+      </ul>
+       
+      
+
+       
+      <div>
+      
+     <div>
+      <h3>Events in Venue:</h3>
+      {% for event in venue_events %}
+      <h4><a href="{% url 'event-details' event.slug %}">{{ event.name }} </a> </h4>
+      {% endfor %}
+     </div> 
+{% endblock content  %}
