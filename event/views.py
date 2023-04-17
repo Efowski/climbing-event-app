@@ -1,15 +1,14 @@
- 
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+
 from .form import EventForm, UserForm, VenueForm, CommentForm
 from .models import Event, Venue, Comment
- 
 
 
 def home(request):
@@ -24,7 +23,7 @@ def all_events(request):
 
     return render(request, 'events_list.html', {'events': events, })
 
-@login_required
+
 def create_event(request):
     submit = False
     if request.user.is_authenticated:
@@ -51,8 +50,21 @@ def event_details(request, slug):
         commentform = CommentForm(request.POST or None)
         if commentform.is_valid:
             content = request.POST.get('contents')
-            comment = Comment.objects.create(event=event, author=request.user, contents=content)
+            parent_obj = None
+            try:
+
+                parent_id = int(request.POST.get('parent_id'))
+            except:
+                parent_id = None
+
+            if parent_id:
+                parent_qs = Comment.objects.filter(parent__id=parent_id)    
+                if parent_qs.exists():
+                    parent_obj = parent_qs.first()
+
+            comment = Comment.objects.create(event=event, author=request.user, contents=content, parent=parent_obj)
             comment.save()
+            messages.success(request, "You have added a comment")
             return redirect('home')
         else:
             commentform = CommentForm()
@@ -60,6 +72,7 @@ def event_details(request, slug):
     comments = Comment.objects.all()
              
     return render(request, 'event_details.html', {'event': event, 'user': user, 'commentform': commentform, 'comments':comments  })
+
 
 @login_required
 def event_update(request, event_id):
@@ -114,16 +127,16 @@ def register_event(request, event_id):
     return render (request, 'register_event.html', {'event': event,  })
 
 
-# Venue 
-
-def venue_list(request):
-    all_venue = Venue.objects.all()
-    
-    return render(request, 'venue_list.html', {'all_venue': all_venue,})
+# Venue CRUD
 
 
-def events_venue(request, venue_id):
-    venue = Venue.objects.get(id=venue_id)
+def venues_list(request):
+    venue = Venue.objects.all()
+
+    return render(request, 'venue_list.html', {'venue': venue })
+
+def events_venue(request,  slug):
+    venue = Venue.objects.get(slug=slug)
 
     events = venue.event_set.all()
 
@@ -133,6 +146,7 @@ def events_venue(request, venue_id):
     else:
         messages.success(request, "No Event in that Venue")
         return render(request, 'venue_events.html',)
+
 
 @login_required
 def create_venue(request):
@@ -153,12 +167,17 @@ def create_venue(request):
     return render (request, 'create_venue.html', {'form': form,}) 
 
 
-def venue_details(request, venue_id):
-    venue = Venue.objects.get(pk=venue_id)
-    return render (request, venue_details.html, {'venue': venue, })
-         
-# User and User Profile
+def venue_details(request, slug):
+    venue = Venue.objects.get(slug=slug)
 
+    venue_events = venue.event_set.all()
+
+
+
+    return render (request, 'venue_details.html', {'venue': venue, 'venue_events': venue_events })
+         
+
+# User and User Profile
 
 
 @login_required(login_url='login')
@@ -189,3 +208,7 @@ def update_profile(request, id):
 @login_required
 def delete_profil(request, id):
     pass
+
+
+
+ 
