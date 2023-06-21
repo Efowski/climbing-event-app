@@ -9,10 +9,11 @@ from django.contrib import messages
 
 from .form import EventForm, UserForm, VenueForm, CommentForm
 from .models import Event, Venue, Comment
+from django.db.models import Q 
 
 
 def home(request):
-    all_events = Event.objects.all()
+    all_events = Event.objects.all().order_by('event_date')
 
     return render(request, 'home.html', {'all_events':all_events, })
 
@@ -50,33 +51,32 @@ def event_details(request, slug):
         commentform = CommentForm(request.POST or None)
         if commentform.is_valid:
             content = request.POST.get('contents')
-            parent_obj = None
+            parent_object = None
             try:
-
-                parent_id = int(request.POST.get('parent_id'))
+                parent_id = int(request.POST.get('parent_id') )
             except:
                 parent_id = None
 
             if parent_id:
-                parent_qs = Comment.objects.filter(parent__id=parent_id)    
-                if parent_qs.exists():
-                    parent_obj = parent_qs.first()
-
-            comment = Comment.objects.create(event=event, author=request.user, contents=content, parent=parent_obj)
+                parent_qs = Comment.objects.filter(id=parent_id)    
+                if parent_qs.exists() and parent_qs.count() == 1:
+                    parent_object = parent_qs.first()
+            comment = Comment.objects.create(event=event, author=request.user, contents=content, parent=parent_object)
+            
             comment.save()
             messages.success(request, "You have added a comment")
-            return redirect('home')
+            return redirect('event-details', slug=slug)
         else:
             commentform = CommentForm()
     
-    comments = Comment.objects.all()
+    comments = Comment.objects.all().order_by('-date_added')
              
     return render(request, 'event_details.html', {'event': event, 'user': user, 'commentform': commentform, 'comments':comments  })
 
 
 @login_required
-def event_update(request, event_id):
-    event = Event.objects.get(pk=event_id)
+def event_update(request, slug):
+    event = Event.objects.get(slug=slug)
     event_form = EventForm(request.POST or None, instance=event) 
     if request.user == event.administrator:
 
@@ -102,16 +102,17 @@ def event_delete(request, event_id):
         messages.success(request, "You're not administrator this Event")
         return redirect('home')
 
-
+"""To do search event and venue with few icontains"""
 def search_event(request):
     
     if request.method == 'POST':
         searched = request.POST['searched']
-        events = Event.objects.filter(description__contains=searched)
+        events = Event.objects.filter(Q(name__icontains=searched) & Q(description__icontains=searched))
         
 
         return render(request, 'event_search.html', {'events': events, 'searched': searched, })
     else:
+        print ("Event not found")
         return render(request, 'event_search.html', { })
 
 
@@ -205,9 +206,13 @@ def update_profile(request, id):
 
     return render(request, 'update_profile.html', {'user': user, 'user_form': user_form,})
 
+
 @login_required
-def delete_profil(request, id):
-    pass
+def delete_user_account(request, id):
+    user = User.objects.get(id=id)
+    user.delete()
+    messages.success('Your account was delete')
+    return render(request, 'home')
 
 
 

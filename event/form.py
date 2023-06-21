@@ -93,14 +93,15 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
 
-        fields = ('contents', )
+        fields = ('contents',)
 
         labels = {
-            # 'author': 'Author',
+              
             'contents': 'Write Comment',
+        # 
         }
 
         widgets =  {
-            'contents': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Write your Comment'}),
+            'contents': forms.TextInput(attrs={'class': 'form-control',  'row': '4', 'col': '50'}),
             
         }

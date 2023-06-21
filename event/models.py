@@ -64,8 +64,8 @@ class Comment(models.Model):
     date_added = models.DateField(auto_now_add=True)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='replies', on_delete=models.CASCADE)
 
-    class Meta:
-        ordering = ['-date_added']
+    # class Meta:
+    #     ordering = ['-date_added']
 
 
     def __str__(self):
@@ -73,15 +73,11 @@ class Comment(models.Model):
 
 
   
-    def child(self):
-        return Comment.objects.filter(parent=self).reverse()
+    def children(self):
+        return Comment.objects.filter(parent=self)
     
-
-    def is_parent(self):
-        if self.parent is not None:
-            return False
-        else:
-            True
-        
+    
+    
+    
     
     
