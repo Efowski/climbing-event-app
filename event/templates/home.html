@@ -2,18 +2,19 @@
 
 
 {% block content %}
-{% if  user.is_authenticated %}
-<h1>Hello {{user.username}}</h1>
-{%else %}
-<h1>Hello Guest</h1>
-{% endif %}
-    <center>
+
+     
+    <b>Upcoming Events</b>:
+    <div class="container">  
+        <div class="row row-cols-4 "> 
     {% for event in all_events %}
-        <ul class="list-group" >    
-    <li class="list-group-item" > {{ event.name }} - {{ event.venue }}  </li>
-        </ul>    
-        
+    
+            <div class="col">{{ event.name }} - {{ event.venue }} <b>date:</b> {{ event.event_date}}</div>
+          
     {% endfor %}
-    </center>    
+        </div>
+         
+    </div>  
+        
     
 {% endblock content  %}

@@ -3,40 +3,47 @@
 
 {% block content %}
 {% if  user.is_authenticated %}
+<div class="container">
+<div class="row">    
 <h2> {{ user.username   }} Profile</h2>
-<div> 
-    <p>Username: {{ user.username}}</p>
-    <p>First Name: {{ user.first_name}}</p>
-    <p>Last Name: {{ user.last_name}}</p>
-    <p>Update your profile</p>
-    <a href="{% url 'update-profile' user.id %}">UPDATE</a>
-<div>
-    <h3>Events you are the administrator</h3>
-    {% for  event in events %}
-    {% if event.administrator == request.user %}
-    {{ event }}
-    {% endif %}
-    {% if request.user == event.administrator %}
-    <ul>
+    <div  class="col-sm"> 
+        <p>Username: {{ user.username}}</p>
+        <p>First Name: {{ user.first_name}}</p>
+        <p>Last Name: {{ user.last_name}}</p>
+        <p>Update your profile:</p>
+        <a href="{% url 'update-profile' user.id %}">UPDATE</a>
+        <a></a>
+    </div>    
+    <div class="col-sm">
+        <h3>Events you are the administrator</h3>
+        {% for  event in events %}
+        {% if event.administrator == request.user %}
+        {{ event }}
+        {% endif %}
+        {% if request.user == event.administrator %}
+         
       
-       <a href="{% url 'event-update' event.id %}" class="btn btn-outline-secondary"> Update</a></li>
-      <li class="list-group-item"><a href="{% url 'event-delete' event.id %}" class="btn btn-outline-danger"> Delete</a></li>
-    </ul>
+       <a href="{% url 'event-update' event.id %}" class="btn btn-outline-secondary"> Update</a> 
+       <a href="{% url 'event-delete' event.id %}" class="btn btn-outline-danger"> Delete</a>
+    </div>
     {% endif %}
     {% endfor %}
+    <div class="col-sm">
     <h3>Events in which you participate</h3>
     
     
-    
-    {% for event in events %}
-    <div>
-    <a href="{% url 'event-details' event.id %}">{{ event }}</a>
+        <div class="row">
+        {% for event in events %}
+        
+        <a href="{% url 'event-details' event.id %}">{{ event }}</a>
+        {% endfor %}
+        </div>
     </div>
-    <div>
     
     </div>
+    </div>
     
-    {% endfor %}
+    
     
     
 </div>

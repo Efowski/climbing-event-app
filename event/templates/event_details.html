@@ -3,79 +3,118 @@
 
 {% block content %}
 <h1>Event  </h1>
-<center>
+ 
+<div class="container"> 
+
+  <div class="row">
   {% if event.event_poster  %}
-  <img src="{{ event.event_poster.url }}" class="rounded mx-auto d-block" width="400" height="400"  >
-  {% endif %}
-  <br/>
-  <br/>
+    <div class="col">
+    <img src="{{ event.event_poster.url }}" class="rounded mx-auto d-block" width="400" height="400"  >
+    {% endif %}
+    <br/>
+    <br/>
 
-  <br/>
-    <ul class="list-group">
-        <li class="list-group-item list-group-item-primary">{{ event.name }}</li>
-        <li class="list-group-item">{{ event.venue }}</li>
-        <li class="list-group-item">{{ event.event_date }}</li>
+    <br/>
+      <ul class="list-group">
+          <li class="list-group-item list-group-item-primary">{{ event.name }}</li>
+          <li class="list-group-item">{{ event.venue }}</li>
+          <li class="list-group-item">{{ event.event_date }}</li>
+          
+          <li class="list-group-item">{{ event.description }}</li>
+          <h4>Event Participants</h4>
+          <li class="list-group-item"> {% for participants in event.participants.all  %}
+          {{ participants }} </br>
+          {% endfor %}
+          </li><br/>
+          
+        </ul>
+        {% if request.user == event.administrator %}
+        <ul>
+          
+          <a href="{% url 'event-update' event.slug %}" class="btn btn-outline-secondary"> Update</a></li>
+          <li class="list-group-item"><a href="{% url 'event-delete' event.slug %}" class="btn btn-outline-danger"> Delete</a></li>
+        </ul>
+        {% endif %}
+        <h4><a href="{% url 'register-event' event.slug %}">Register</a> this Event</h4>
+        <br/>
+        <br/>
         
-        <li class="list-group-item">{{ event.description }}</li>
-        <h4>Event Participants</h4>
-        <li class="list-group-item"> {% for participants in event.participants.all  %}
-        {{ participants }} </br>
-        {% endfor %}
-        </li><br/>
-        
-      </ul>
-      {% if request.user == event.administrator %}
-      <ul>
-        
-         <a href="{% url 'event-update' event.slug %}" class="btn btn-outline-secondary"> Update</a></li>
-        <li class="list-group-item"><a href="{% url 'event-delete' event.slug %}" class="btn btn-outline-danger"> Delete</a></li>
-      </ul>
-      {% endif %}
-      <h4><a href="{% url 'register-event' event.slug %}">Register</a> this Event</h4>
-      <br/>
-      <br/>
-      
 
-      </h4>
-      <div>
+        </h4>
+        <div>
+      <div class="container-fluid mt-2">
       
       {% if user.is_authenticated %} 
-      <h4>Add Comment:</h4>
+       
       <form action="" method="POST">
         <div>
         {% csrf_token %}
         {{ commentform.as_p }}
-        <input type="submit" Value="Post">
+        <input type="submit" Value="Write comment">
         </div>
-      </form  
+      </form>  
       {% else %}
-      <h2>You need to Login to Comment</h2>
+      <h2> You need to Login to Comment</h2>
       {% endif %}
 
       </div>
-      <div>
+      <div class="container">
         <h3>Comments:</h3><br/>
 
       {% if not event.comments.all %}
         <p>No Comments yet</p>
       {% else %} 
       
-      {% comment %} {% if comment.is_parent %}   {% endcomment %}
+       
       {% for comment in event.comments.all %}
-      
+      {% comment %} {% if comment.is_parent  %} {% endcomment %}
 
-        <div>
+        <div class=" row justify-content-start">
           
-          <p> <b>Author:</b> {{ comment.author }} : {{ comment.date_added }} </p>
+          <blockquote> 
+            <p class="bg-secondary text-white">{{ comment.contents }}</p>
             
-          {{ comment.contents }}
-        </div>  
+             
+            
+          
+          </blockquote>
+          {% comment %} {% endif %}  {% endcomment %}
+          
+          <div class="form-group row">
+          <form action="" method="POST">
+            
+            {% csrf_token %}
+            {{ commentform.as_p }}
+            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+            <input class="btn btn-primary" type="submit" Value="Reply"><p>Reply to the <b>{{comment.author}}</b> comment</p>
+            
+          </form> 
+          <div class="col-4">
+            {% if comment.is_parent %}
+            {% for replies in comment.children  %}
+            
+            <blockquote> 
+              <p >{{ replies.contents }}</p>
+              
+              <b>Author:</b> {{ comment.author }} : {{ comment.date_added }} </p>
+              
+            
+            </blockquote>
+             
+            {% endfor %}
+            {% endif %}
+          </div>
+
+        </div> 
+         
+        </div>
             </br>
       
       {% endfor %}  
-      {% comment %} {% endif %}       {% endcomment %}
+       
       {% endif %}   
       
       </div>
-</center>
+    </div>
+</div>
 {% endblock content  %}

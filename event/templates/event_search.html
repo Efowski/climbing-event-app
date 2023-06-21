@@ -19,7 +19,14 @@
       {% endif %}  
     
     {% block content %}
-    <h2>Search Results</h2>
+    <h2>Search Results:</h2>
+    <div class="container">
+      {% for event in events %}
+      <div>
+        {{ event.name }}
+      </div>
+      {% endfor %}
+    </div>
 
     {% endblock content%}
 
